@@ -1,12 +1,12 @@
 
 import './App.css'
-import { Button } from './components/ui/button'
+import TravelGuideResiter from './reactComponents/TravelGuideResiter'
 
 function App() {
 
   return (
     <>
-    <Button>aaaa</Button>
+    <TravelGuideResiter/>
     </>
   )
 }
