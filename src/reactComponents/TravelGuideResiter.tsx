@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+
 import {
   Carousel,
   CarouselContent,
@@ -9,19 +9,37 @@ import {
 import DestinationRegister from "./DestinationRegister";
 import ItemsRegister from "./ItemsRegister";
 import ScheduleRegister from "./ScheduleRegister";
+import { useState } from "react";
+import { Destination, Item, Schedule } from "@/types/travelGuide";
 function TravelGuideResiter() {
+  const [destinationData, setDestinationData] = useState<Destination[]>([]);
+  const [itemData, setItemData] = useState<Item[]>([]);
+  const [scheduleData, setScheduleData] = useState<Schedule[]>([]);
+
+  const handleDestinationData = (data:Destination[]) => {
+    setDestinationData(data);
+  };
+
+  const handleItemData = (data:Item[]) => {
+    setItemData(data);
+  };
+
+  const handleScheduleData = (data:Schedule[]) => {
+    setScheduleData(data);
+  };
+
   return (
     <div>
       <Carousel className="w-9/12 ml-28">
         <CarouselContent>
           <CarouselItem>
-            <DestinationRegister />
+            <DestinationRegister onDataChange={handleDestinationData}/>
           </CarouselItem>
           <CarouselItem>
-            <ItemsRegister />
+            <ItemsRegister onDataChange={handleItemData}/>
           </CarouselItem>
           <CarouselItem>
-            <ScheduleRegister />
+            <ScheduleRegister onDataChange={handleScheduleData}/>
           </CarouselItem>
         </CarouselContent>
         <CarouselPrevious />

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Item } from "@/types/travelGuide";
-import { ChangeEvent, useState } from "react";
+import { Item, ItemslDataProps } from "@/types/travelGuide";
+import { ChangeEvent, useEffect, useState } from "react";
 
-function ItemsRegister() {
+function ItemsRegister({ onDataChange }:ItemslDataProps) {
   const [item, setItem] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [itemList, setItemList] = useState<Item[]>([]);
@@ -15,6 +15,10 @@ function ItemsRegister() {
       setItem(e.target.value);
     }
   }
+
+  useEffect(() => {
+    onDataChange(itemList);
+  }, [itemList, onDataChange]);
 
   function onClickAddItem() {
     if(item === ''){

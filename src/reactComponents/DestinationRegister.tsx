@@ -1,19 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Destination } from "@/types/travelGuide";
-import { ChangeEvent, useState } from "react";
+import { Destination, DestinationsDataProps } from "@/types/travelGuide";
+import { ChangeEvent, useEffect, useState } from "react";
 
-function DestinationRegister() {
+function DestinationRegister({ onDataChange }: DestinationsDataProps) {
   const [destination, setDestination] = useState<string>("");
   const [destinationList, setDestinationList] = useState<Destination[]>([]);
 
   function hadleChangeDestination(e: ChangeEvent<HTMLInputElement>) {
     setDestination(e.target.value);
   }
+  useEffect(() => {
+    onDataChange(destinationList);
+  }, [destinationList, onDataChange]);
 
   function onClickAddDistination() {
-    if(destination === ""){
-        return
+    if (destination === "") {
+      return;
     }
     const destInfo = {
       id: self.crypto.randomUUID(),
@@ -22,7 +25,7 @@ function DestinationRegister() {
       // lat:,
     };
     setDestinationList([...destinationList, destInfo]);
-    setDestination('')
+    setDestination("");
   }
   function handleDeleteDestination(id: string) {
     const newDestList = destinationList.filter((dest) => dest.id !== id);
