@@ -9,11 +9,16 @@ export type Item = {
 };
 
 export type Schedule = {
-  id: string;
+  // id: string;
   time: string;
   place: string;
   activity: string;
   note: string;
+};
+
+export type DaySchedule = {
+  date: string;
+  schedule: [];
 };
 
 export type ItemslDataProps = {
