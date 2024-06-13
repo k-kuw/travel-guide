@@ -1,14 +1,12 @@
-
-import './App.css'
-import TravelGuideResiter from './reactComponents/TravelGuideResiter'
+import "./App.css";
+import RouterConfig from "./router/RouterConfig";
 
 function App() {
-
   return (
     <>
-    <TravelGuideResiter/>
+      <RouterConfig />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

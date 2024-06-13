@@ -41,7 +41,11 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
         </div>
       ))}
       <Input value={destination} onChange={(e) => hadleChangeDestination(e)} />
-      <Button type="button" onClick={() => onClickAddDistination()}>
+      <Button
+        type="button"
+        className="w-full mt-5"
+        onClick={() => onClickAddDistination()}
+      >
         行き先を追加
       </Button>
     </div>

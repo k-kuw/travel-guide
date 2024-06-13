@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Item, ItemslDataProps } from "@/types/travelGuide";
 import { ChangeEvent, useEffect, useState } from "react";
 
-function ItemsRegister({ onDataChange }:ItemslDataProps) {
+function ItemsRegister({ onDataChange }: ItemslDataProps) {
   const [item, setItem] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [itemList, setItemList] = useState<Item[]>([]);
@@ -21,8 +21,8 @@ function ItemsRegister({ onDataChange }:ItemslDataProps) {
   }, [itemList, onDataChange]);
 
   function onClickAddItem() {
-    if(item === ''){
-        return
+    if (item === "") {
+      return;
     }
     const newItemList = {
       id: self.crypto.randomUUID(),
@@ -49,7 +49,9 @@ function ItemsRegister({ onDataChange }:ItemslDataProps) {
       ))}
       持ち物
       <Input name="item" value={item} onChange={(e) => handleChange(e)} />
-      <Button onClick={() => onClickAddItem()}>持ち物を追加する</Button>
+      <Button className="w-full mt-5" onClick={() => onClickAddItem()}>
+        持ち物を追加する
+      </Button>
     </div>
   );
 }
