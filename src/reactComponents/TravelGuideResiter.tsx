@@ -5,16 +5,23 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Destination, Item, Schedule } from "@/types/travelGuide";
+import { useState } from "react";
 import DestinationRegister from "./DestinationRegister";
 import ItemsRegister from "./ItemsRegister";
-import ScheduleRegister from "./ScheduleRegister";
-import { useState } from "react";
-import { Destination, Item, Schedule } from "@/types/travelGuide";
 import RegisterConfirmation from "./RegisterConfirmation";
+import ScheduleRegister from "./ScheduleRegister";
+import TitleRegister from "./TitleRegister";
+
 function TravelGuideResiter() {
+  const [titleData, setTitleData] = useState<string>("");
   const [destinationData, setDestinationData] = useState<Destination[]>([]);
   const [itemData, setItemData] = useState<Item[]>([]);
   const [scheduleData, setScheduleData] = useState<Schedule[]>([]);
+
+  const handleTitleData = (data: string) => {
+    setTitleData(data);
+  };
 
   const handleDestinationData = (data: Destination[]) => {
     setDestinationData(data);
@@ -33,6 +40,9 @@ function TravelGuideResiter() {
       <Carousel style={{ margin: "0 25vw" }}>
         <CarouselContent>
           <CarouselItem>
+            <TitleRegister onDataChange={handleTitleData} />
+          </CarouselItem>
+          <CarouselItem>
             <DestinationRegister onDataChange={handleDestinationData} />
           </CarouselItem>
           <CarouselItem>
@@ -43,6 +53,7 @@ function TravelGuideResiter() {
           </CarouselItem>
           <CarouselItem>
             <RegisterConfirmation
+              titleData={titleData}
               destinationData={destinationData}
               itemData={itemData}
               scheduleData={scheduleData}

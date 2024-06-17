@@ -1,15 +1,14 @@
 export type Destination = {
-  id: string;
+  id: number;
   name: string;
 };
 
 export type Item = {
-  id: string;
+  id: number;
   name: string;
 };
 
 export type Schedule = {
-  // id: string;
   time: string;
   place: string;
   activity: string;
@@ -21,13 +20,18 @@ export type DaySchedule = {
   schedule: [];
 };
 
-export type ItemslDataProps = {
-  onDataChange: (data: Item[]) => void;
+export type TitleDataProps = {
+  onDataChange: (data: string) => void;
 };
 
 export type DestinationsDataProps = {
   onDataChange: (data: Destination[]) => void;
 };
+
+export type ItemslDataProps = {
+  onDataChange: (data: Item[]) => void;
+};
+
 export type SchedulesDataProps = {
   onDataChange: (data: Schedule[]) => void;
 };
