@@ -21,10 +21,12 @@ function RegisterConfirmation(props: Props) {
       belongings: itemData,
       schedules: scheduleData,
     };
+    const token = localStorage.getItem("token");
     fetch("http://127.0.0.1:8000/guides/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(params),
     })
