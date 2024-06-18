@@ -7,6 +7,7 @@ import UserRegister from "@/reactComponents/UserRegister";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 function RouterConfig() {
+  // ログイン状況
   const [loginContext, setLoginContext] = useState<boolean>(false);
 
   return (

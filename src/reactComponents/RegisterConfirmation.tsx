@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Destination, Item, Schedule } from "@/types/travelGuide";
+import { useNavigate } from "react-router-dom";
 type Props = {
   titleData: string;
   destinationData: Destination[];
@@ -12,10 +13,12 @@ type Props = {
 function RegisterConfirmation(props: Props) {
   const { titleData, destinationData, itemData, scheduleData } = props;
 
+  const navigate = useNavigate();
+
   function registerGuide() {
     console.log(titleData, itemData, scheduleData);
     const params = {
-      user_id: 1,
+      username: localStorage.getItem("username"),
       title: titleData,
       destinations: destinationData,
       belongings: itemData,
@@ -34,8 +37,8 @@ function RegisterConfirmation(props: Props) {
         return res.json();
       })
       .then((data) => {
-        // console.log(data.access_token);
         console.log(data);
+        navigate("travel-guide-list");
       });
   }
 
