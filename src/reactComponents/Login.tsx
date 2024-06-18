@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   setLoginContext: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,6 +46,10 @@ function Login(props: Props) {
       });
   }
 
+  function moveToNewRegister() {
+    navigate("/user-register");
+  }
+
   return (
     <div className="p-1" style={{ margin: "0 25vw" }}>
       <form onSubmit={handleLogin}>
@@ -70,8 +74,8 @@ function Login(props: Props) {
           ログイン
         </Button>
       </form>
-      <Button className="w-full mt-5">
-        <Link to="/user-register">ユーザ登録</Link>
+      <Button className="w-full mt-5" onClick={moveToNewRegister}>
+        ユーザ登録
       </Button>
     </div>
   );

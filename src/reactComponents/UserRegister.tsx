@@ -10,8 +10,9 @@ function UserRegister() {
 
   const navigate = useNavigate();
 
-  function registUser(e: FormEvent<HTMLFormElement>) {
+  function registerUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log("register user start");
     const params = {
       username: nameRef.current!.value,
       email: emailRef.current!.value,
@@ -42,7 +43,7 @@ function UserRegister() {
 
   return (
     <div className="p-1" style={{ margin: "0 25vw" }}>
-      <form onSubmit={registUser}>
+      <form onSubmit={registerUser}>
         <div>
           <label htmlFor="name" className="text-2xl font-semibold">
             ユーザ名
