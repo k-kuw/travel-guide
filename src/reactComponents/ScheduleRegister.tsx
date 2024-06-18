@@ -51,6 +51,7 @@ function ScheduleRegister({ onDataChange }: SchedulesDataProps) {
   }
   return (
     <div>
+      <div className="text-4xl font-semibold">スケジュール</div>
       <div className="w-full">
         <Label>日にち</Label>
         <Input type="date" />

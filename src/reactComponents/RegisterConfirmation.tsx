@@ -3,20 +3,54 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Destination, Item, Schedule } from "@/types/travelGuide";
 type Props = {
+  titleData: string;
   destinationData: Destination[];
   itemData: Item[];
   scheduleData: Schedule[];
 };
 
 function RegisterConfirmation(props: Props) {
-  const { destinationData, itemData, scheduleData } = props;
+  const { titleData, destinationData, itemData, scheduleData } = props;
+
+  function registerGuide() {
+    console.log(titleData, itemData, scheduleData);
+    const params = {
+      user_id: 1,
+      title: titleData,
+      destinations: destinationData,
+      belongings: itemData,
+      schedules: scheduleData,
+    };
+    const token = localStorage.getItem("token");
+    fetch("http://127.0.0.1:8000/guides/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(params),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        // console.log(data.access_token);
+        console.log(data);
+      });
+  }
+
   return (
     <div>
       <div>
+        <Label>タイトル</Label>
+        <div>{titleData}</div>
+      </div>
+      <Separator className="my-4" />
+      <div>
         <Label>目的地</Label>
-        {destinationData.map((dest) => (
-          <div key={dest.id}>
-            <div>{dest.name}</div>
+        {destinationData.map((destination) => (
+          <div key={destination.id}>
+            <div>{destination.name}</div>
           </div>
         ))}
       </div>
@@ -32,8 +66,8 @@ function RegisterConfirmation(props: Props) {
       <Separator className="my-4" />
       <div>
         <Label>スケジュール</Label>
-        {scheduleData.map((schedule) => (
-          <div key={schedule.id}>
+        {scheduleData.map((schedule, index) => (
+          <div key={index}>
             <div>{schedule.time}</div>
             <div>{schedule.place}</div>
             <div>{schedule.activity}</div>
@@ -42,7 +76,9 @@ function RegisterConfirmation(props: Props) {
         ))}
       </div>
       <Separator className="my-4" />
-      <Button>しおりを保存する</Button>
+      <Button type="button" className="w-full mt-5" onClick={registerGuide}>
+        しおりを保存する
+      </Button>
     </div>
   );
 }
