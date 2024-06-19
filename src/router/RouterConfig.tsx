@@ -1,7 +1,7 @@
 import Header from "@/reactComponents/Header";
 import Login from "@/reactComponents/Login";
 import TravelGuideList from "@/reactComponents/TravelGuideList";
-import TravelGuideMap from "@/reactComponents/TravelGuideMap";
+import TravelGuideMap from "@/reactComponents/TravelGuideDetail";
 import TravelGuideResiter from "@/reactComponents/TravelGuideResiter";
 import UserRegister from "@/reactComponents/UserRegister";
 import { useState } from "react";
