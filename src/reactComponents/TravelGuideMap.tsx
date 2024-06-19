@@ -1,7 +1,5 @@
-import React from "react";
-
 function TravelGuideMap() {
-  return <div>map</div>;
+  return <div>hello</div>;
 }
 
 export default TravelGuideMap;

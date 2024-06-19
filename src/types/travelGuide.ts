@@ -1,8 +1,8 @@
 export type Destination = {
   id: number;
   name: string;
-  lon?: string;
-  lat?: string;
+  lon: string;
+  lat: string;
 };
 
 export type Item = {
