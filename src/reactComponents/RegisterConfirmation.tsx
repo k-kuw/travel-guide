@@ -38,7 +38,7 @@ function RegisterConfirmation(props: Props) {
       })
       .then((data) => {
         console.log(data);
-        navigate("travel-guide-list");
+        navigate("/travel-guide-list");
       });
   }
 

@@ -19,15 +19,33 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
     if (destination === "") {
       return;
     }
-    const destInfo = {
-      id: destinationSeq,
+    const params = {
       name: destination,
-      // lon:,緯度経度を追加する
-      // lat:,
     };
-    setDestinationSeq(destinationSeq + 1);
-    setDestinationList([...destinationList, destInfo]);
-    setDestination("");
+    const token = localStorage.getItem("token");
+    fetch("http://127.0.0.1:8000/map/search-address", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(params),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const destInfo = {
+          id: destinationSeq,
+          name: destination,
+          lon: data.lon,
+          lat: data.lat,
+        };
+        setDestinationSeq(destinationSeq + 1);
+        setDestinationList([...destinationList, destInfo]);
+        setDestination("");
+      });
   }
   function handleDeleteDestination(id: number) {
     const newDestList = destinationList.filter((dest) => dest.id !== id);

@@ -21,6 +21,9 @@ function RouterConfig() {
             element={<TravelGuideResiter />}
           />
           <Route path="/travel-guide-list" element={<TravelGuideList />} />
+          <Route path="/travel-guide">
+            <Route path=":guideId" element={<TravelGuideMap />} />
+          </Route>
           <Route path="/travel-guide-map" element={<TravelGuideMap />} />
           <Route
             path="/login"
