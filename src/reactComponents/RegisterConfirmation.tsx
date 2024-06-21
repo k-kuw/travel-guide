@@ -69,14 +69,27 @@ function RegisterConfirmation(props: Props) {
       <Separator className="my-4" />
       <div>
         <Label>スケジュール</Label>
-        {scheduleData.map((schedule, index) => (
-          <div key={index}>
-            <div>{schedule.time}</div>
-            <div>{schedule.place}</div>
-            <div>{schedule.activity}</div>
-            <div>{schedule.note}</div>
-          </div>
-        ))}
+        <table className="table-fixed w-full text-left break-all">
+          <thead className="border-b-2">
+            <tr>
+              <th>時間</th>
+              <th>場所</th>
+              <th>活動</th>
+              <th>備考</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {scheduleData.map((schedule) => (
+              <tr key={schedule.time}>
+                <td>{schedule.time}</td>
+                <td>{schedule.place}</td>
+                <td>{schedule.activity}</td>
+                <td>{schedule.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <Separator className="my-4" />
       <Button type="button" className="w-full mt-5" onClick={registerGuide}>

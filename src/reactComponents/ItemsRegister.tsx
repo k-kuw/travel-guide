@@ -31,7 +31,7 @@ function ItemsRegister({ onDataChange }: ItemslDataProps) {
   }
   return (
     <div className="p-1">
-      <div className="text-4xl font-semibold">持ち物</div>
+      <div className="text-4xl font-semibold mb-4 font-mono">持ち物</div>
       {itemList.map((item) => (
         <div key={item.id}>
           {item.name}

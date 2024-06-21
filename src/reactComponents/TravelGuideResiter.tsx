@@ -49,7 +49,10 @@ function TravelGuideResiter() {
             <ItemsRegister onDataChange={handleItemData} />
           </CarouselItem>
           <CarouselItem>
-            <ScheduleRegister onDataChange={handleScheduleData} />
+            <ScheduleRegister
+              onDataChange={handleScheduleData}
+              destinationData={destinationData}
+            />
           </CarouselItem>
           <CarouselItem>
             <RegisterConfirmation
