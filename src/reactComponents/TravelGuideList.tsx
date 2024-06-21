@@ -23,13 +23,13 @@ function TravelGuideList() {
       });
   }, []);
   return (
-    <div>
+    <ul className="list-disc p-1" style={{ margin: "0 25vw" }}>
       {guides.map((guide) => (
-        <div key={guide.id}>
+        <li key={guide.id} className="text-lg mt-3">
           <Link to={`/travel-guide/${guide.id}`}>{guide.title}</Link>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 

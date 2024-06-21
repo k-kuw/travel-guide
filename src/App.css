@@ -1,0 +1,20 @@
+@media print {
+  .no-print {
+    display: none;
+  }
+  .no-print-border {
+    border: none;
+  }
+  .print-flex {
+    display: flex;
+  }
+  .half-width {
+    margin-top: 5%;
+    width: 50%;
+  }
+}
+
+@page {
+  size: A4 landscape;
+  margin: 0;
+}

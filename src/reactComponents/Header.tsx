@@ -8,7 +8,7 @@ type Props = {
 function Header(props: Props) {
   const { loginContext } = props;
   return (
-    <div>
+    <div className="no-print">
       <header className="bg-blue-500 py-4 px-6 md:px-8">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -19,9 +19,6 @@ function Header(props: Props) {
               </Button>
               <Button variant="ghost" className=" hover:text-white">
                 <Link to="/travel-guide-list">しおり一覧</Link>
-              </Button>
-              <Button variant="ghost" className=" hover:text-white">
-                <Link to="/travel-guide-map">地図</Link>
               </Button>
               <Button variant="ghost" className=" hover:text-white">
                 <Link to="/login">ログイン</Link>
