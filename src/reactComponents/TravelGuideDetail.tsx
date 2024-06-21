@@ -58,7 +58,9 @@ function TravelGuideDetail() {
         })}
       </div>
       <div>
-        <TravelGuideMap />
+        {guideDetail && (
+          <TravelGuideMap destinations={guideDetail.destinations} />
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Destination, DestinationsDataProps } from "@/types/travelGuide";
 import { ChangeEvent, useEffect, useState } from "react";
+import TravelGuideMap from "./TravelGuideMap";
 
 function DestinationRegister({ onDataChange }: DestinationsDataProps) {
   const [destinationSeq, setDestinationSeq] = useState<number>(1);
@@ -39,12 +40,15 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
         const destInfo = {
           id: destinationSeq,
           name: destination,
-          lon: data.lon,
-          lat: data.lat,
+          lon: data.lon || null,
+          lat: data.lat || null,
         };
         setDestinationSeq(destinationSeq + 1);
         setDestinationList([...destinationList, destInfo]);
         setDestination("");
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
   function handleDeleteDestination(id: number) {
@@ -53,7 +57,7 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
   }
   return (
     <div className="p-1">
-      <div className="text-4xl font-semibold">目的地</div>
+      <div className="text-4xl font-semibold mb-4 font-mono">目的地</div>
       {destinationList.map((dest) => (
         <div key={dest.id}>
           {dest.name}
@@ -63,11 +67,14 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
       <Input value={destination} onChange={(e) => handleChangeDestination(e)} />
       <Button
         type="button"
-        className="w-full mt-5"
+        className="w-full my-5"
         onClick={() => onClickAddDistination()}
       >
         目的地を追加
       </Button>
+      {destinationList.length !== 0 && (
+        <TravelGuideMap destinations={destinationList} />
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ function TitleRegister({ onDataChange }: TitleDataProps) {
 
   return (
     <div className="p-1">
-      <div className="text-4xl font-semibold">タイトル</div>
+      <div className="text-4xl font-semibold mb-4 font-mono">タイトル</div>
       <Input value={title} onChange={(e) => handleChangeTitle(e)} />
     </div>
   );
