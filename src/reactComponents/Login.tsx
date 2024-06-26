@@ -1,13 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TravelGuideDialog from "./TravelGuideDialog";
 
 type Props = {
   setLoginContext: React.Dispatch<React.SetStateAction<boolean>>;
 };
 function Login(props: Props) {
   const { setLoginContext } = props;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [errorTitle, setErrorTitle] = useState("サーバーエラー");
+  const [errorMessage, setErrorMessage] =
+    useState("サーバーでエラーが発生しました。");
+
   const nameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -29,20 +35,29 @@ function Login(props: Props) {
     })
       .then((response) => {
         if (!response.ok) {
-          console.log(response);
           throw new Error(response.statusText);
         }
         return response.json();
       })
       .then((data) => {
-        console.log(data, data.access_token);
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("username", nameRef.current!.value);
         setLoginContext(true);
         navigate("/travel-guide-register");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.message === "Unauthorized") {
+          setErrorTitle("認証失敗");
+          setErrorMessage(
+            "認証に失敗しました。\nユーザ名、パスワードをご確認の上、再度お試しください。"
+          );
+        } else if (error.message === "Unprocessable Entity") {
+          setErrorTitle("入力不正");
+          setErrorMessage(
+            "入力が検知できませんでした。\nユーザ名、パスワードを再度ご入力ください。"
+          );
+        }
+        setOpenDialog(true);
       });
   }
 
@@ -77,6 +92,12 @@ function Login(props: Props) {
       <Button className="w-full mt-5" onClick={moveToNewRegister}>
         ユーザ登録
       </Button>
+      <TravelGuideDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </div>
   );
 }

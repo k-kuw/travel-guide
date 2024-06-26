@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Destination, Item, Schedule } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import checkbox from "../assets/checkbox_unchecked.png";
 import TravelGuideMap from "./TravelGuideMap";
 
@@ -14,6 +13,7 @@ type GuideDetail = {
 
 function TravelGuideDetail() {
   const { guideId } = useParams();
+  const navigator = useNavigate();
   const [guideDetail, setGuideDetail] = useState<GuideDetail>();
   const [printColor, setPrintColor] = useState<string>("");
   useEffect(() => {
@@ -24,17 +24,26 @@ function TravelGuideDetail() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
+        return res.json();
+      })
       .then((data) => {
-        console.log(data);
         setGuideDetail(data);
+      })
+      .catch((error) => {
+        if (error.message === "Unauthorized") {
+          navigator("/login");
+        }
       });
   }, []);
 
   return (
     <div>
       <div
-        className="md:flex text-center print-flex pt-2 border-4 no-print-border"
+        className="md:flex text-center print-flex pt-2 border-4 no-print-border print-size"
         style={{ backgroundColor: printColor }}
       >
         <div className="flex-auto md:w-1/2 mx-4 half-width">
@@ -83,32 +92,26 @@ function TravelGuideDetail() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center mt-4 no-print">
-        <label className="self-center no-print">色設定：</label>
+      <div className="flex justify-center no-print">
+        <label className="self-center mt-4">色設定：</label>
         <select
           defaultValue=""
-          className="mr-8 border w-20 no-print"
+          className="mt-4 mr-8 border w-20"
           onChange={(e) => setPrintColor(e.target.value)}
         >
-          <option value="" className="no-print"></option>
-          <option value="rgb(255,105,180)" className="no-print">
-            赤色
-          </option>
-          <option value="rgb(175,238,238)" className="no-print">
-            青色
-          </option>
-          <option value="rgb(152,251,152)" className="no-print">
-            緑色
-          </option>
+          <option value="" className=""></option>
+          <option value="rgb(255,105,180)">赤色</option>
+          <option value="rgb(175,238,238)">青色</option>
+          <option value="rgb(152,251,152)">緑色</option>
         </select>
-        <Button
-          className="no-print"
+        <button
           onClick={() => {
             window.print();
           }}
+          className="mt-4 border"
         >
-          <span className="no-print">印刷</span>
-        </Button>
+          <span>印刷</span>
+        </button>
       </div>
     </div>
   );

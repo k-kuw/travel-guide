@@ -110,7 +110,9 @@ function ScheduleRegister(props: Props) {
             {destinationData &&
               destinationData.map((destination) => {
                 return (
-                  <option value={destination.name}>{destination.name}</option>
+                  <option value={destination.name} key={destination.name}>
+                    {destination.name}
+                  </option>
                 );
               })}
           </select>

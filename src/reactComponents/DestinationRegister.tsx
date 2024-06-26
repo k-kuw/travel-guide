@@ -2,12 +2,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Destination, DestinationsDataProps } from "@/types/travelGuide";
 import { ChangeEvent, useEffect, useState } from "react";
+import TravelGuideDialog from "./TravelGuideDialog";
 import TravelGuideMap from "./TravelGuideMap";
 
 function DestinationRegister({ onDataChange }: DestinationsDataProps) {
   const [destinationSeq, setDestinationSeq] = useState<number>(1);
   const [destination, setDestination] = useState<string>("");
   const [destinationList, setDestinationList] = useState<Destination[]>([]);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [errorTitle, setErrorTitle] = useState("サーバーエラー");
+  const [errorMessage, setErrorMessage] =
+    useState("サーバーでエラーが発生しました。");
 
   function handleChangeDestination(e: ChangeEvent<HTMLInputElement>) {
     setDestination(e.target.value);
@@ -32,11 +38,13 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
       },
       body: JSON.stringify(params),
     })
-      .then((res) => {
-        return res.json();
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
       })
       .then((data) => {
-        console.log(data);
         const destInfo = {
           id: destinationSeq,
           name: destination,
@@ -48,7 +56,13 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
         setDestination("");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.message === "Not Found") {
+          setErrorTitle("目的地不明");
+          setErrorMessage(
+            "目的地が見つかりませんでした。\n別の地名でお試しください。"
+          );
+        }
+        setOpenDialog(true);
       });
   }
   function handleDeleteDestination(id: number) {
@@ -75,6 +89,12 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
       {destinationList.length !== 0 && (
         <TravelGuideMap destinations={destinationList} />
       )}
+      <TravelGuideDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </div>
   );
 }
