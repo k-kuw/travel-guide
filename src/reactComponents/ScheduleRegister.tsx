@@ -104,12 +104,15 @@ function ScheduleRegister(props: Props) {
             name="place"
             className="block mb-4 w-full border h-10"
             onChange={(e) => onChangeSchedule(e)}
+            defaultValue={""}
           >
-            <option value="" selected></option>
+            <option value=""></option>
             {destinationData &&
               destinationData.map((destination) => {
                 return (
-                  <option value={destination.name}>{destination.name}</option>
+                  <option value={destination.name} key={destination.name}>
+                    {destination.name}
+                  </option>
                 );
               })}
           </select>
@@ -126,9 +129,6 @@ function ScheduleRegister(props: Props) {
             value={schedule.note}
             onChange={(e) => onChangeSchedule(e)}
           />
-          {/* <Button onClick={() => onClickDelSchedule(index)}>
-              <Trash2 />
-            </Button> */}
         </div>
       </div>
       <Button onClick={onClickAddSchedule} className="w-full mt-5">

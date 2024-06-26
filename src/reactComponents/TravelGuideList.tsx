@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type Guide = {
   id: string;
@@ -8,6 +8,7 @@ type Guide = {
 
 function TravelGuideList() {
   const [guides, setGuides] = useState<Guide[]>([]);
+  const navigator = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch("http://127.0.0.1:8000/guides/search", {
@@ -16,20 +17,29 @@ function TravelGuideList() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
+        return res.json();
+      })
       .then((data) => {
-        console.log(data);
         setGuides(data);
+      })
+      .catch((error) => {
+        if (error.message === "Unauthorized") {
+          navigator("/login");
+        }
       });
   }, []);
   return (
-    <div>
+    <ul className="list-disc p-1" style={{ margin: "0 25vw" }}>
       {guides.map((guide) => (
-        <div key={guide.id}>
+        <li key={guide.id} className="text-lg mt-3">
           <Link to={`/travel-guide/${guide.id}`}>{guide.title}</Link>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 

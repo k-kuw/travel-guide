@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TravelGuideDialog from "./TravelGuideDialog";
 
 function UserRegister() {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [errorTitle, setErrorTitle] = useState("サーバーエラー");
+  const [errorMessage, setErrorMessage] =
+    useState("サーバーでエラーが発生しました。");
+
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -12,7 +18,6 @@ function UserRegister() {
 
   function registerUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("register user start");
     const params = {
       username: nameRef.current!.value,
       email: emailRef.current!.value,
@@ -27,17 +32,26 @@ function UserRegister() {
     })
       .then((response) => {
         if (!response.ok) {
-          console.log(response);
           throw new Error(response.statusText);
         }
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.message === "Bad Request") {
+          setErrorTitle("入力不正");
+          setErrorMessage(
+            "入力が検知できませんでした。\nユーザ名、メールアドレス、パスワードを再度ご入力ください。"
+          );
+        } else if (error.message === "Conflict") {
+          setErrorTitle("ユーザ名重複");
+          setErrorMessage(
+            "そのユーザ名は既に使用されています。\n別のユーザ名をご使用ください。"
+          );
+        }
+        setOpenDialog(true);
       });
   }
 
@@ -71,6 +85,12 @@ function UserRegister() {
           登録
         </Button>
       </form>
+      <TravelGuideDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </div>
   );
 }

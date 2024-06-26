@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Destination, Item, Schedule } from "@/types/travelGuide";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TravelGuideDialog from "./TravelGuideDialog";
 type Props = {
   titleData: string;
   destinationData: Destination[];
@@ -12,11 +14,14 @@ type Props = {
 
 function RegisterConfirmation(props: Props) {
   const { titleData, destinationData, itemData, scheduleData } = props;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [errorTitle, setErrorTitle] = useState("サーバーエラー");
+  const [errorMessage, setErrorMessage] =
+    useState("サーバーでエラーが発生しました。");
 
   const navigate = useNavigate();
 
   function registerGuide() {
-    console.log(titleData, itemData, scheduleData);
     const params = {
       username: localStorage.getItem("username"),
       title: titleData,
@@ -34,11 +39,27 @@ function RegisterConfirmation(props: Props) {
       body: JSON.stringify(params),
     })
       .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         navigate("/travel-guide-list");
+      })
+      .catch((error) => {
+        if (error.message === "Unauthorized") {
+          setErrorTitle("ユーザ認証失敗");
+          setErrorMessage(
+            "ユーザ情報が取得できませんでした。\n再度ログインしてください。"
+          );
+        } else if (error.message === "Bad Request") {
+          setErrorTitle("入力不正");
+          setErrorMessage(
+            "入力が検知できませんでした。\nタイトルが入力されていることをご確認ください。"
+          );
+        }
+        setOpenDialog(true);
       });
   }
 
@@ -95,6 +116,12 @@ function RegisterConfirmation(props: Props) {
       <Button type="button" className="w-full mt-5" onClick={registerGuide}>
         しおりを保存する
       </Button>
+      <TravelGuideDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </div>
   );
 }
