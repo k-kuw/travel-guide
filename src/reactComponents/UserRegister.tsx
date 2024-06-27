@@ -4,20 +4,34 @@ import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TravelGuideDialog from "./TravelGuideDialog";
 
+// ユーザ登録コンポーネント
 function UserRegister() {
+  // ユーザ登録失敗ダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
+  // ユーザ登録失敗内容
   const [errorTitle, setErrorTitle] = useState("サーバーエラー");
   const [errorMessage, setErrorMessage] =
     useState("サーバーでエラーが発生しました。");
 
+  // ユーザ名入力要素
   const nameRef = useRef<HTMLInputElement>(null);
+  // メールアドレス入力要素
   const emailRef = useRef<HTMLInputElement>(null);
+  // パスワード入力要素
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
+  // ユーザ登録処理
   function registerUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // パスワードが4文字以下の場合
+    if (passwordRef.current!.value.length <= 4) {
+      setErrorTitle("パスワード文字数不足");
+      setErrorMessage("パスワードは5文字以上必要です。");
+      setOpenDialog(true);
+      return;
+    }
     const params = {
       username: nameRef.current!.value,
       email: emailRef.current!.value,
@@ -36,20 +50,26 @@ function UserRegister() {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(() => {
         navigate("/login");
       })
       .catch((error) => {
+        // 入力内容不足時
         if (error.message === "Bad Request") {
           setErrorTitle("入力不正");
           setErrorMessage(
             "入力が検知できませんでした。\nユーザ名、メールアドレス、パスワードを再度ご入力ください。"
           );
-        } else if (error.message === "Conflict") {
+        }
+        // ユーザ名が既に使用されている時
+        else if (error.message === "Conflict") {
           setErrorTitle("ユーザ名重複");
           setErrorMessage(
             "そのユーザ名は既に使用されています。\n別のユーザ名をご使用ください。"
           );
+        } else if (error.message === "Length Required") {
+          setErrorTitle("パスワード文字数不足");
+          setErrorMessage("パスワードは5文字以上必要です。");
         }
         setOpenDialog(true);
       });

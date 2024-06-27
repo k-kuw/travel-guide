@@ -4,14 +4,16 @@ import NeedLogin from "@/reactComponents/NeedLogin";
 import NotFound from "@/reactComponents/NotFound";
 import TravelGuideMap from "@/reactComponents/TravelGuideDetail";
 import TravelGuideList from "@/reactComponents/TravelGuideList";
-import TravelGuideResiter from "@/reactComponents/TravelGuideResiter";
+import TravelGuideRegister from "@/reactComponents/TravelGuideRegister";
 import UserRegister from "@/reactComponents/UserRegister";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+// ルーティング設定コンポーネント
 function RouterConfig() {
   // ログイン状況
   const [loginContext, setLoginContext] = useState<boolean>(false);
-  // localStrage状況
+  // token状況
   const token = localStorage.getItem("token");
 
   return (
@@ -21,11 +23,11 @@ function RouterConfig() {
         <Routes>
           <Route path="/" element={<Navigate replace to="/login" />} />
           {loginContext || token ? (
-            // ログイン中
+            // ログイン時
             <>
               <Route
                 path="/travel-guide-register"
-                element={<TravelGuideResiter />}
+                element={<TravelGuideRegister />}
               />
               <Route path="/travel-guide-list" element={<TravelGuideList />} />
               <Route path="/travel-guide">
@@ -34,7 +36,7 @@ function RouterConfig() {
               <Route path="/travel-guide-map" element={<TravelGuideMap />} />
             </>
           ) : (
-            // 未ログイン
+            // 未ログイン時
             <>
               <Route path="/travel-guide-register" element={<NeedLogin />} />
               <Route path="/travel-guide-list" element={<NeedLogin />} />

@@ -1,3 +1,4 @@
+// 要ログイン警告コンポーネント
 function NeedLogin() {
   return (
     <div>

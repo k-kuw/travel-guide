@@ -5,9 +5,12 @@ type Props = {
   loginContext: boolean;
 };
 
+// ヘッダーコンポーネント
 function Header(props: Props) {
+  // ログイン状況
   const { loginContext } = props;
   const location = useLocation();
+  // 現在パスのヘッダ項目の色を変更する処理
   function changeCurrentPageNavColor(path: string) {
     if (location.pathname === path) {
       return "text-white";

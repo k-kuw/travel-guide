@@ -1,17 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Item, ItemslDataProps } from "@/types/travelGuide";
+import { DataChangeProp, Item } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
 
-function ItemsRegister({ onDataChange }: ItemslDataProps) {
+// 持ち物入力コンポーネント
+function ItemsRegister({ onDataChange }: DataChangeProp<Item[]>) {
+  // 持ち物
   const [item, setItem] = useState<string>("");
+  // 持ち物シーケンス番号
   const [itemSeq, setItemSeq] = useState<number>(1);
+  // 持ち物リスト
   const [itemList, setItemList] = useState<Item[]>([]);
 
+  // 持ち物リストを親コンポーネントに設定
   useEffect(() => {
     onDataChange(itemList);
   }, [itemList, onDataChange]);
 
+  // 持ち物追加処理
   function onClickAddItem() {
     if (item === "") {
       return;
@@ -25,6 +31,7 @@ function ItemsRegister({ onDataChange }: ItemslDataProps) {
     setItem("");
   }
 
+  // 持ち物削除処理
   function handleDelItem(id: number) {
     const newItemList = itemList.filter((item) => item.id !== id);
     setItemList(newItemList);
@@ -35,7 +42,12 @@ function ItemsRegister({ onDataChange }: ItemslDataProps) {
       {itemList.map((item) => (
         <div key={item.id}>
           {item.name}
-          <Button onClick={() => handleDelItem(item.id)}>削除</Button>
+          <button
+            onClick={() => handleDelItem(item.id)}
+            className="border text-white bg-black rounded px-2 ml-2 mb-1"
+          >
+            削除
+          </button>
         </div>
       ))}
       持ち物
