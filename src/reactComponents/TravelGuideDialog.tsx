@@ -15,6 +15,8 @@ type Props = {
   title: string;
   message: string;
 };
+
+// ダイアログコンポーネント
 function TravelGuideDialog(props: Props) {
   const { open, setOpen, title, message } = props;
   return (

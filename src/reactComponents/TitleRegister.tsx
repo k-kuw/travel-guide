@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
-import { TitleDataProps } from "@/types/travelGuide";
-import { ChangeEvent, useEffect, useState } from "react";
+import { DataChangeProp } from "@/types/travelGuide";
+import { useEffect, useState } from "react";
 
-function TitleRegister({ onDataChange }: TitleDataProps) {
+// タイトル入力コンポーネント
+function TitleRegister({ onDataChange }: DataChangeProp<string>) {
+  // タイトル
   const [title, setTitle] = useState<string>("");
 
-  function handleChangeTitle(e: ChangeEvent<HTMLInputElement>) {
-    setTitle(e.target.value);
-  }
+  // タイトルを親コンポーネントに設定
   useEffect(() => {
     onDataChange(title);
   }, [title, onDataChange]);
@@ -15,7 +15,7 @@ function TitleRegister({ onDataChange }: TitleDataProps) {
   return (
     <div className="p-1">
       <div className="text-4xl font-semibold mb-4 font-mono">タイトル</div>
-      <Input value={title} onChange={(e) => handleChangeTitle(e)} />
+      <Input value={title} onChange={(e) => setTitle(e.target.value)} />
     </div>
   );
 }

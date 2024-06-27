@@ -1,3 +1,4 @@
+// 未設定URL表示コンポーネント
 function NotFound() {
   return (
     <div>

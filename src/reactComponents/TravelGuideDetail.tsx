@@ -11,11 +11,17 @@ type GuideDetail = {
   schedules: Schedule[];
 };
 
+// しおり詳細コンポーネント
 function TravelGuideDetail() {
+  // しおりID
   const { guideId } = useParams();
   const navigator = useNavigate();
+  // しおり情報
   const [guideDetail, setGuideDetail] = useState<GuideDetail>();
+  // 印刷カラー
   const [printColor, setPrintColor] = useState<string>("");
+
+  // しおり情報取得
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch(`http://127.0.0.1:8000/guides/search/${guideId}`, {
@@ -24,16 +30,17 @@ function TravelGuideDetail() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.statusText);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
-        return res.json();
+        return response.json();
       })
       .then((data) => {
         setGuideDetail(data);
       })
       .catch((error) => {
+        // 認証失敗時
         if (error.message === "Unauthorized") {
           navigator("/login");
         }
@@ -48,18 +55,19 @@ function TravelGuideDetail() {
       >
         <div className="flex-auto md:w-1/2 mx-4 half-width">
           <div className="mb-2 border-2">
-            <p className="font-semibold">タイトル</p>
             <p className="text-4xl font-semibold">{guideDetail?.title}</p>
           </div>
           <div className="my-2 border-2">
             <p className="font-semibold">目的地</p>
-            {guideDetail?.destinations.map((destination) => {
-              return (
-                <p key={destination.name} className="text-left ml-4">
-                  {destination.name}
-                </p>
-              );
-            })}
+            <ul className="list-disc ml-4">
+              {guideDetail?.destinations.map((destination) => {
+                return (
+                  <li key={destination.name} className="text-left ml-4">
+                    {destination.name}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           <div className="my-2 border-2">
             <p className="font-semibold">持ち物</p>
@@ -75,15 +83,33 @@ function TravelGuideDetail() {
         </div>
         <div className="flex-auto md:w-1/2 mx-4 half-width">
           <div className="my-2 border-2">
-            <p className="font-semibold">スケジュール</p>
-            {guideDetail?.schedules.map((schedule) => {
-              return (
-                <p key={schedule.time}>
-                  {schedule.time} {schedule.place} {schedule.activity}{" "}
-                  {schedule.note}
-                </p>
-              );
-            })}
+            <table className="table-fixed w-full text-left break-all">
+              <thead className="border-b-2">
+                <tr>
+                  <th>時間</th>
+                  <th>場所</th>
+                  <th>活動</th>
+                  <th>備考</th>
+                </tr>
+              </thead>
+              <tbody>
+                {guideDetail?.schedules.map((schedule) => {
+                  let formattedTime = new Date(schedule.time).toLocaleString();
+                  formattedTime = formattedTime.slice(
+                    0,
+                    formattedTime.length - 3
+                  );
+                  return (
+                    <tr key={schedule.time} className="align-top">
+                      <td>{formattedTime}</td>
+                      <td>{schedule.place}</td>
+                      <td>{schedule.activity}</td>
+                      <td>{schedule.note}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
           <div className="my-2 self-center">
             {guideDetail && (
@@ -108,9 +134,9 @@ function TravelGuideDetail() {
           onClick={() => {
             window.print();
           }}
-          className="mt-4 border"
+          className="mt-4 border text-white bg-black rounded px-2"
         >
-          <span>印刷</span>
+          印刷
         </button>
       </div>
     </div>

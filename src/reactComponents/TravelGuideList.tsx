@@ -6,9 +6,12 @@ type Guide = {
   title: string;
 };
 
+// しおり一覧コンポーネント
 function TravelGuideList() {
+  // しおり
   const [guides, setGuides] = useState<Guide[]>([]);
   const navigator = useNavigate();
+  // しおり一覧取得
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch("http://127.0.0.1:8000/guides/search", {
@@ -17,16 +20,17 @@ function TravelGuideList() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.statusText);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
-        return res.json();
+        return response.json();
       })
       .then((data) => {
         setGuides(data);
       })
       .catch((error) => {
+        // 認証失敗時
         if (error.message === "Unauthorized") {
           navigator("/login");
         }

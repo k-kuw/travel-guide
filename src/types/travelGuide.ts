@@ -1,3 +1,4 @@
+// 目的地
 export type Destination = {
   id: number;
   name: string;
@@ -5,11 +6,13 @@ export type Destination = {
   lat: string;
 };
 
+// 持ち物
 export type Item = {
   id: number;
   name: string;
 };
 
+// スケジュール
 export type Schedule = {
   time: string;
   place: string;
@@ -17,23 +20,7 @@ export type Schedule = {
   note: string;
 };
 
-export type DaySchedule = {
-  date: string;
-  schedule: [];
-};
-
-export type TitleDataProps = {
-  onDataChange: (data: string) => void;
-};
-
-export type DestinationsDataProps = {
-  onDataChange: (data: Destination[]) => void;
-};
-
-export type ItemslDataProps = {
-  onDataChange: (data: Item[]) => void;
-};
-
-export type SchedulesDataProps = {
-  onDataChange: (data: Schedule[]) => void;
+// しおり登録画面入力内容設定
+export type DataChangeProp<T> = {
+  onDataChange: (data: T) => void;
 };

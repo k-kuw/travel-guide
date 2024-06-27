@@ -1,27 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Destination, DestinationsDataProps } from "@/types/travelGuide";
-import { ChangeEvent, useEffect, useState } from "react";
+import { DataChangeProp, Destination } from "@/types/travelGuide";
+import { useEffect, useState } from "react";
 import TravelGuideDialog from "./TravelGuideDialog";
 import TravelGuideMap from "./TravelGuideMap";
 
-function DestinationRegister({ onDataChange }: DestinationsDataProps) {
+// 目的地入力コンポーネント
+function DestinationRegister({ onDataChange }: DataChangeProp<Destination[]>) {
+  // 目的地シーケンス番号
   const [destinationSeq, setDestinationSeq] = useState<number>(1);
+  // 目的地
   const [destination, setDestination] = useState<string>("");
+  // 目的地リスト
   const [destinationList, setDestinationList] = useState<Destination[]>([]);
-
+  // 目的地検索エラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
+  // 目的地検索エラー内容
   const [errorTitle, setErrorTitle] = useState("サーバーエラー");
   const [errorMessage, setErrorMessage] =
     useState("サーバーでエラーが発生しました。");
 
-  function handleChangeDestination(e: ChangeEvent<HTMLInputElement>) {
-    setDestination(e.target.value);
-  }
+  // 目的地リストを親コンポーネントに設定
   useEffect(() => {
     onDataChange(destinationList);
   }, [destinationList, onDataChange]);
 
+  // 目的地追加処理
   function onClickAddDistination() {
     if (destination === "") {
       return;
@@ -56,6 +60,7 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
         setDestination("");
       })
       .catch((error) => {
+        // 地名の検索結果がなかった場合
         if (error.message === "Not Found") {
           setErrorTitle("目的地不明");
           setErrorMessage(
@@ -65,6 +70,7 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
         setOpenDialog(true);
       });
   }
+  // 目的地削除処理
   function handleDeleteDestination(id: number) {
     const newDestList = destinationList.filter((dest) => dest.id !== id);
     setDestinationList(newDestList);
@@ -75,10 +81,18 @@ function DestinationRegister({ onDataChange }: DestinationsDataProps) {
       {destinationList.map((dest) => (
         <div key={dest.id}>
           {dest.name}
-          <Button onClick={() => handleDeleteDestination(dest.id)}>削除</Button>
+          <button
+            onClick={() => handleDeleteDestination(dest.id)}
+            className="border text-white bg-black rounded px-2 ml-2 mb-1"
+          >
+            削除
+          </button>
         </div>
       ))}
-      <Input value={destination} onChange={(e) => handleChangeDestination(e)} />
+      <Input
+        value={destination}
+        onChange={(e) => setDestination(e.target.value)}
+      />
       <Button
         type="button"
         className="w-full my-5"

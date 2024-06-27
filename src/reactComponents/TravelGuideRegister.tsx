@@ -13,24 +13,33 @@ import RegisterConfirmation from "./RegisterConfirmation";
 import ScheduleRegister from "./ScheduleRegister";
 import TitleRegister from "./TitleRegister";
 
-function TravelGuideResiter() {
+// しおり登録親コンポーネント
+function TravelGuideRegister() {
+  // タイトル
   const [titleData, setTitleData] = useState<string>("");
+  // 目的地
   const [destinationData, setDestinationData] = useState<Destination[]>([]);
+  // 持ち物
   const [itemData, setItemData] = useState<Item[]>([]);
+  // スケジュール
   const [scheduleData, setScheduleData] = useState<Schedule[]>([]);
 
+  // タイトル変更処理
   const handleTitleData = (data: string) => {
     setTitleData(data);
   };
 
+  // 目的地変更処理
   const handleDestinationData = (data: Destination[]) => {
     setDestinationData(data);
   };
 
+  // 持ち物変更処理
   const handleItemData = (data: Item[]) => {
     setItemData(data);
   };
 
+  // スケジュール変更処理
   const handleScheduleData = (data: Schedule[]) => {
     setScheduleData(data);
   };
@@ -70,4 +79,4 @@ function TravelGuideResiter() {
   );
 }
 
-export default TravelGuideResiter;
+export default TravelGuideRegister;

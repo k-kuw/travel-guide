@@ -4,9 +4,13 @@ import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 type Props = {
   destinations: Destination[];
 };
+
+// 地図コンポーネント
 function TravelGuideMap(props: Props) {
+  // 目的地
   const { destinations } = props;
 
+  // 地図表示中心設定処理
   function getCenterLatLng(destinations: Destination[]) {
     const center = destinations.find((destination) => {
       return destination.lat && destination.lon;

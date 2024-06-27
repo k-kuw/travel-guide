@@ -2,24 +2,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Destination, Schedule, SchedulesDataProps } from "@/types/travelGuide";
+import { DataChangeProp, Destination, Schedule } from "@/types/travelGuide";
 import { ChangeEvent, useEffect, useState } from "react";
 
 type Props = {
-  onDataChange: SchedulesDataProps["onDataChange"];
+  onDataChange: DataChangeProp<Schedule[]>["onDataChange"];
   destinationData: Destination[];
 };
 
+// スケジュール入力コンポーネント
 function ScheduleRegister(props: Props) {
+  // 親データ設定メソッド、目的地名データ
   const { onDataChange, destinationData } = props;
+  // スケジュール
   const [schedule, setSchedule] = useState<Schedule>({
     time: "",
     place: "",
     activity: "",
     note: "",
   });
+  // スケジュールリスト
   const [scheduleList, setScheduleList] = useState<Schedule[]>([]);
 
+  // スケジュール変更メソッド
   function onChangeSchedule(
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
@@ -39,7 +44,8 @@ function ScheduleRegister(props: Props) {
     });
   }
 
-  const onClickAddSchedule = () => {
+  // スケジュール追加処理
+  function onClickAddSchedule() {
     setScheduleList((prevSchedules) => [...prevSchedules, schedule]);
     setSchedule({
       time: "",
@@ -47,12 +53,14 @@ function ScheduleRegister(props: Props) {
       activity: "",
       note: "",
     });
-  };
+  }
 
+  // スケジュールを親データに設定
   useEffect(() => {
     onDataChange(scheduleList);
   }, [scheduleList, onDataChange]);
 
+  // スケジュール削除処理
   function onClickDelSchedule(index: number) {
     setScheduleList((prevSchedules) => {
       const newSchedules = [...prevSchedules];
@@ -64,7 +72,7 @@ function ScheduleRegister(props: Props) {
     <div>
       <div className="text-4xl font-semibold mb-4 font-mono">スケジュール</div>
       <div className="w-full">
-        <table className="table-fixed w-full text-left break-all bg-slate-100">
+        <table className="table-fixed w-full text-left break-all">
           <thead className="border-b-2">
             <tr>
               <th>時間</th>
@@ -75,19 +83,32 @@ function ScheduleRegister(props: Props) {
             </tr>
           </thead>
           <tbody>
-            {scheduleList.map((schedule, index) => (
-              <tr key={schedule.time}>
-                <td>{schedule.time}</td>
-                <td>{schedule.place}</td>
-                <td>{schedule.activity}</td>
-                <td>{schedule.note}</td>
-                <td>
-                  <Button onClick={() => onClickDelSchedule(index)}>
-                    削除
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {scheduleList.map((schedule, index) => {
+              let formattedTime = "";
+              if (schedule.time) {
+                formattedTime = new Date(schedule.time).toLocaleString();
+                formattedTime = formattedTime.slice(
+                  0,
+                  formattedTime.length - 3
+                );
+              }
+              return (
+                <tr key={index} className="align-top">
+                  <td>{formattedTime}</td>
+                  <td>{schedule.place}</td>
+                  <td>{schedule.activity}</td>
+                  <td>{schedule.note}</td>
+                  <td className="text-center">
+                    <button
+                      onClick={() => onClickDelSchedule(index)}
+                      className="border text-white bg-black rounded px-2 ml-2 mb-1"
+                    >
+                      削除
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <div style={{ margin: "5vh 1vw" }}>
@@ -104,7 +125,7 @@ function ScheduleRegister(props: Props) {
             name="place"
             className="block mb-4 w-full border h-10"
             onChange={(e) => onChangeSchedule(e)}
-            defaultValue={""}
+            defaultValue={schedule.place}
           >
             <option value=""></option>
             {destinationData &&
