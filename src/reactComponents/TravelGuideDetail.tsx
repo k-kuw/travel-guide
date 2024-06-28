@@ -1,5 +1,6 @@
 import { Destination, Item, Schedule } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
+import { Rnd } from "react-rnd";
 import { useNavigate, useParams } from "react-router-dom";
 import checkbox from "../assets/checkbox_unchecked.png";
 import TravelGuideMap from "./TravelGuideMap";
@@ -48,16 +49,22 @@ function TravelGuideDetail() {
   }, []);
 
   return (
-    <div>
+    <>
       <div
-        className="md:flex text-center print-flex pt-2 border-4 no-print-border print-size"
-        style={{ backgroundColor: printColor }}
+        className="text-center print-div border-2 no-print-border"
+        style={{
+          backgroundColor: printColor,
+          height: "794px",
+          width: "1123px",
+        }}
       >
-        <div className="flex-auto md:w-1/2 mx-4 half-width">
-          <div className="mb-2 border-2">
+        <Rnd default={{ x: 5, y: 0, width: "540px", height: "auto" }}>
+          <div className="border-2">
             <p className="text-4xl font-semibold">{guideDetail?.title}</p>
           </div>
-          <div className="my-2 border-2">
+        </Rnd>
+        <Rnd default={{ x: 5, y: 100, width: "540px", height: "auto" }}>
+          <div className="border-2">
             <p className="font-semibold">目的地</p>
             <ul className="list-disc ml-4">
               {guideDetail?.destinations.map((destination) => {
@@ -69,7 +76,9 @@ function TravelGuideDetail() {
               })}
             </ul>
           </div>
-          <div className="my-2 border-2">
+        </Rnd>
+        <Rnd default={{ x: 5, y: 300, width: "540px", height: "auto" }}>
+          <div className="border-2">
             <p className="font-semibold">持ち物</p>
             {guideDetail?.belongings.map((item) => {
               return (
@@ -80,9 +89,9 @@ function TravelGuideDetail() {
               );
             })}
           </div>
-        </div>
-        <div className="flex-auto md:w-1/2 mx-4 half-width">
-          <div className="my-2 border-2">
+        </Rnd>
+        <Rnd default={{ x: 575, y: 0, width: "540px", height: "auto" }}>
+          <div className="border-2">
             <table className="table-fixed w-full text-left break-all">
               <thead className="border-b-2">
                 <tr>
@@ -111,35 +120,34 @@ function TravelGuideDetail() {
               </tbody>
             </table>
           </div>
-          <div className="my-2 self-center">
+        </Rnd>
+        <Rnd default={{ x: 575, y: 400, width: "540px", height: "auto" }}>
+          <div className="self-center">
             {guideDetail && (
               <TravelGuideMap destinations={guideDetail.destinations} />
             )}
           </div>
-        </div>
+        </Rnd>
       </div>
       <div className="flex justify-center no-print">
-        <label className="self-center mt-4">色設定：</label>
-        <select
-          defaultValue=""
-          className="mt-4 mr-8 border w-20"
-          onChange={(e) => setPrintColor(e.target.value)}
-        >
-          <option value="" className=""></option>
-          <option value="rgb(255,105,180)">赤色</option>
-          <option value="rgb(175,238,238)">青色</option>
-          <option value="rgb(152,251,152)">緑色</option>
-        </select>
-        <button
-          onClick={() => {
-            window.print();
-          }}
-          className="mt-4 border text-white bg-black rounded px-2"
-        >
-          印刷
-        </button>
+        <div className="mt-4">
+          <label className="align-middle">色設定：</label>
+          <input
+            type="color"
+            className="align-middle"
+            onChange={(e) => setPrintColor(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              window.print();
+            }}
+            className="border text-white bg-black rounded px-2 ml-4 align-middle"
+          >
+            印刷
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

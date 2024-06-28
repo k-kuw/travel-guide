@@ -19,7 +19,6 @@ function RouterConfig() {
   return (
     <>
       <BrowserRouter>
-        <Header loginContext={loginContext} />
         <Routes>
           <Route path="/" element={<Navigate replace to="/login" />} />
           {loginContext || token ? (
@@ -27,31 +26,105 @@ function RouterConfig() {
             <>
               <Route
                 path="/travel-guide-register"
-                element={<TravelGuideRegister />}
+                element={
+                  <>
+                    <Header loginContext={loginContext} />
+                    <TravelGuideRegister />
+                  </>
+                }
               />
-              <Route path="/travel-guide-list" element={<TravelGuideList />} />
+              <Route
+                path="/travel-guide-list"
+                element={
+                  <>
+                    <Header loginContext={loginContext} />
+                    <TravelGuideList />
+                  </>
+                }
+              />
               <Route path="/travel-guide">
                 <Route path=":guideId" element={<TravelGuideMap />} />
               </Route>
-              <Route path="/travel-guide-map" element={<TravelGuideMap />} />
+              <Route
+                path="/travel-guide-map"
+                element={
+                  <>
+                    <Header loginContext={loginContext} />
+                    <TravelGuideMap />
+                  </>
+                }
+              />
             </>
           ) : (
             // 未ログイン時
             <>
-              <Route path="/travel-guide-register" element={<NeedLogin />} />
-              <Route path="/travel-guide-list" element={<NeedLogin />} />
+              <Route
+                path="/travel-guide-register"
+                element={
+                  <>
+                    <Header loginContext={loginContext} />
+                    <NeedLogin />
+                  </>
+                }
+              />
+              <Route
+                path="/travel-guide-list"
+                element={
+                  <>
+                    <Header loginContext={loginContext} />
+                    <NeedLogin />
+                  </>
+                }
+              />
               <Route path="/travel-guide">
-                <Route path=":guideId" element={<NeedLogin />} />
+                <Route
+                  path=":guideId"
+                  element={
+                    <>
+                      <Header loginContext={loginContext} />
+                      <NeedLogin />
+                    </>
+                  }
+                />
               </Route>
-              <Route path="/travel-guide-map" element={<NeedLogin />} />
+              <Route
+                path="/travel-guide-map"
+                element={
+                  <>
+                    <Header loginContext={loginContext} />
+                    <NeedLogin />
+                  </>
+                }
+              />
             </>
           )}
           <Route
             path="/login"
-            element={<Login setLoginContext={setLoginContext} />}
+            element={
+              <>
+                <Header loginContext={loginContext} />
+                <Login setLoginContext={setLoginContext} />
+              </>
+            }
           />
-          <Route path="/user-register" element={<UserRegister />} />
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="/user-register"
+            element={
+              <>
+                <Header loginContext={loginContext} />
+                <UserRegister />
+              </>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <>
+                <Header loginContext={loginContext} />
+                <NotFound />
+              </>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>
