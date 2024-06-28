@@ -2,10 +2,6 @@
   body {
     -webkit-print-color-adjust: exact;
   }
-  .print-size {
-    height: 210mm;
-    width: 297mm;
-  }
   .no-print {
     display: none;
   }
@@ -15,12 +11,13 @@
   .no-print-border {
     border: none;
   }
-  .print-flex {
-    display: flex;
+  .print-div {
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  .half-width {
-    margin-top: 5%;
-    width: 50%;
+  .print-div * {
+    max-width: 100%;
+    resize: none !important;
   }
 }
 

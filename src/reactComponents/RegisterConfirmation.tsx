@@ -109,8 +109,14 @@ function RegisterConfirmation(props: Props) {
           </thead>
           <tbody>
             {scheduleData.map((schedule) => {
-              let formattedTime = new Date(schedule.time).toLocaleString();
-              formattedTime = formattedTime.slice(0, formattedTime.length - 3);
+              let formattedTime = "";
+              if (schedule.time) {
+                formattedTime = new Date(schedule.time).toLocaleString();
+                formattedTime = formattedTime.slice(
+                  0,
+                  formattedTime.length - 3
+                );
+              }
               return (
                 <tr key={schedule.time} className="align-top">
                   <td>{formattedTime}</td>

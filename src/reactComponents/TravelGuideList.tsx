@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Guide = {
   id: string;
@@ -36,11 +36,22 @@ function TravelGuideList() {
         }
       });
   }, []);
+
+  // 印刷用画面遷移処理
+  function openWindowForPrint(guideId: string) {
+    window.open(`/travel-guide/${guideId}`);
+  }
   return (
     <ul className="list-disc p-1" style={{ margin: "0 25vw" }}>
       {guides.map((guide) => (
         <li key={guide.id} className="text-lg mt-3">
-          <Link to={`/travel-guide/${guide.id}`}>{guide.title}</Link>
+          <button
+            onClick={() => {
+              openWindowForPrint(guide.id);
+            }}
+          >
+            {guide.title}
+          </button>
         </li>
       ))}
     </ul>
