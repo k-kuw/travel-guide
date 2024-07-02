@@ -14,7 +14,7 @@ function TravelGuideList() {
   // しおり一覧取得
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://127.0.0.1:8000/guides/search", {
+    fetch(`${import.meta.env.VITE_API_PATH}/guides/search`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

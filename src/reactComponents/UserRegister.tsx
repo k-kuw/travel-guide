@@ -37,7 +37,7 @@ function UserRegister() {
       email: emailRef.current!.value,
       password: passwordRef.current!.value,
     };
-    fetch("http://127.0.0.1:8000/users/register", {
+    fetch(`${import.meta.env.VITE_API_PATH}/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

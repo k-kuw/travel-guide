@@ -34,7 +34,7 @@ function DestinationRegister({ onDataChange }: DataChangeProp<Destination[]>) {
       name: destination,
     };
     const token = localStorage.getItem("token");
-    fetch("http://127.0.0.1:8000/map/search-address", {
+    fetch(`${import.meta.env.VITE_API_PATH}/map/search-address`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

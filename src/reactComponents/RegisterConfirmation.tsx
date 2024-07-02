@@ -35,7 +35,7 @@ function RegisterConfirmation(props: Props) {
       schedules: scheduleData,
     };
     const token = localStorage.getItem("token");
-    fetch("http://127.0.0.1:8000/guides/register", {
+    fetch(`${import.meta.env.VITE_API_PATH}/guides/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
