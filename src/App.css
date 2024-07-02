@@ -12,12 +12,8 @@
     border: none;
   }
   .print-div {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .print-div * {
-    max-width: 100%;
-    resize: none !important;
+    margin: 0;
+    padding: 0;
   }
 }
 
