@@ -35,7 +35,7 @@ function Login(props: Props) {
     params.append("username", nameRef.current!.value);
     params.append("password", passwordRef.current!.value);
     // トークン取得処理
-    fetch("http://127.0.0.1:8000/token", {
+    fetch(`${import.meta.env.VITE_API_PATH}/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
