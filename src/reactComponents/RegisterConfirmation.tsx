@@ -1,21 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Destination, Item, Schedule } from "@/types/travelGuide";
+import {
+  Belonging,
+  Destination,
+  RegisterGuide,
+  Schedule,
+} from "@/types/travelGuide";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TravelGuideDialog from "./TravelGuideDialog";
 type Props = {
   titleData: string;
   destinationData: Destination[];
-  itemData: Item[];
+  belongingData: Belonging[];
   scheduleData: Schedule[];
 };
 
 // 登録内容確認コンポーネント
 function RegisterConfirmation(props: Props) {
   // しおり入力データ
-  const { titleData, destinationData, itemData, scheduleData } = props;
+  const { titleData, destinationData, belongingData, scheduleData } = props;
   // 登録エラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
   // 登録エラー内容
@@ -24,19 +29,34 @@ function RegisterConfirmation(props: Props) {
     useState("サーバーでエラーが発生しました。");
 
   const navigate = useNavigate();
+  const { guideId } = useParams();
 
   // しおり登録処理
   function registerGuide() {
-    const params = {
-      username: localStorage.getItem("username"),
+    const revisedDestinationData = destinationData.map((destination) => {
+      delete destination.id;
+      return destination;
+    });
+    const params: RegisterGuide = {
+      username: localStorage.getItem("username") || "",
       title: titleData,
-      destinations: destinationData,
-      belongings: itemData,
+      destinations: revisedDestinationData,
+      belongings: belongingData,
       schedules: scheduleData,
     };
+
+    let requestPath = "register";
+    let requestMethod = "POST";
+    // 更新の場合
+    if (guideId) {
+      params.id = parseInt(guideId);
+      requestPath = "update";
+      requestMethod = "PUT";
+    }
+
     const token = localStorage.getItem("token");
-    fetch(`${import.meta.env.VITE_API_PATH}/guides/register`, {
-      method: "POST",
+    fetch(`${import.meta.env.VITE_API_PATH}/guides/${requestPath}`, {
+      method: requestMethod,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -67,6 +87,11 @@ function RegisterConfirmation(props: Props) {
             "入力が検知できませんでした。\nタイトルが入力されていることをご確認ください。"
           );
         }
+        // その他
+        else {
+          setErrorTitle("サーバーエラー");
+          setErrorMessage("サーバーでエラーが発生しました。");
+        }
         setOpenDialog(true);
       });
   }
@@ -89,9 +114,9 @@ function RegisterConfirmation(props: Props) {
       <Separator className="my-4" />
       <div>
         <Label>持ち物</Label>
-        {itemData.map((item) => (
-          <div key={item.id}>
-            <div>{item.name}</div>
+        {belongingData.map((belonging) => (
+          <div key={belonging.id}>
+            <div>{belonging.name}</div>
           </div>
         ))}
       </div>

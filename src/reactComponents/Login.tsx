@@ -71,6 +71,11 @@ function Login(props: Props) {
             "入力が検知できませんでした。\nユーザ名、パスワードを再度ご入力ください。"
           );
         }
+        // その他
+        else {
+          setErrorTitle("サーバーエラー");
+          setErrorMessage("サーバーでエラーが発生しました。");
+        }
         setOpenDialog(true);
       });
   }

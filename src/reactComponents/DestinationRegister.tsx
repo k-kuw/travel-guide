@@ -2,23 +2,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataChangeProp, Destination } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TravelGuideDialog from "./TravelGuideDialog";
 import TravelGuideMap from "./TravelGuideMap";
 
+type Props = {
+  data: Destination[];
+  onDataChange: DataChangeProp<Destination[]>;
+};
+
 // 目的地入力コンポーネント
-function DestinationRegister({ onDataChange }: DataChangeProp<Destination[]>) {
+function DestinationRegister(props: Props) {
+  const { data, onDataChange } = props;
   // 目的地シーケンス番号
   const [destinationSeq, setDestinationSeq] = useState<number>(1);
   // 目的地
   const [destination, setDestination] = useState<string>("");
   // 目的地リスト
-  const [destinationList, setDestinationList] = useState<Destination[]>([]);
+  const [destinationList, setDestinationList] = useState<Destination[]>(data);
   // 目的地検索エラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
   // 目的地検索エラー内容
   const [errorTitle, setErrorTitle] = useState("サーバーエラー");
   const [errorMessage, setErrorMessage] =
     useState("サーバーでエラーが発生しました。");
+
+  const navigator = useNavigate();
 
   // 目的地リストを親コンポーネントに設定
   useEffect(() => {
@@ -60,12 +69,21 @@ function DestinationRegister({ onDataChange }: DataChangeProp<Destination[]>) {
         setDestination("");
       })
       .catch((error) => {
+        // 認証失敗時
+        if (error.message === "Unauthorized") {
+          navigator("/login");
+        }
         // 地名の検索結果がなかった場合
-        if (error.message === "Not Found") {
+        else if (error.message === "Not Found") {
           setErrorTitle("目的地不明");
           setErrorMessage(
             "目的地が見つかりませんでした。\n別の地名でお試しください。"
           );
+        }
+        // その他
+        else {
+          setErrorTitle("サーバーエラー");
+          setErrorMessage("サーバーでエラーが発生しました。");
         }
         setOpenDialog(true);
       });
@@ -82,7 +100,7 @@ function DestinationRegister({ onDataChange }: DataChangeProp<Destination[]>) {
         <div key={dest.id}>
           {dest.name}
           <button
-            onClick={() => handleDeleteDestination(dest.id)}
+            onClick={() => handleDeleteDestination(dest.id!)}
             className="border text-white bg-black rounded px-2 ml-2 mb-1"
           >
             削除
