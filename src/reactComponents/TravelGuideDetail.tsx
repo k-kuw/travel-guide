@@ -1,16 +1,8 @@
-import { Destination, Item, Schedule } from "@/types/travelGuide";
+import { GuideDetail } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
-import { Rnd } from "react-rnd";
 import { useNavigate, useParams } from "react-router-dom";
-import checkbox from "../assets/checkbox_unchecked.png";
+import TravelGuideDialog from "./TravelGuideDialog";
 import TravelGuideMap from "./TravelGuideMap";
-
-type GuideDetail = {
-  title: string;
-  destinations: Destination[];
-  belongings: Item[];
-  schedules: Schedule[];
-};
 
 // しおり詳細コンポーネント
 function TravelGuideDetail() {
@@ -19,12 +11,19 @@ function TravelGuideDetail() {
   const navigator = useNavigate();
   // しおり情報
   const [guideDetail, setGuideDetail] = useState<GuideDetail>();
-  // 印刷カラー
-  const [printColor, setPrintColor] = useState<string>("");
+
+  // トークン
+  const token = localStorage.getItem("token");
+
+  // エラーダイアログ表示
+  const [openDialog, setOpenDialog] = useState(false);
+  // しおり操作エラー内容
+  const [errorTitle, setErrorTitle] = useState("サーバーエラー");
+  const [errorMessage, setErrorMessage] =
+    useState("サーバーでエラーが発生しました。");
 
   // しおり情報取得
   useEffect(() => {
-    const token = localStorage.getItem("token");
     fetch(`${import.meta.env.VITE_API_PATH}/guides/search/${guideId}`, {
       method: "GET",
       headers: {
@@ -45,27 +44,71 @@ function TravelGuideDetail() {
         if (error.message === "Unauthorized") {
           navigator("/login");
         }
+        // しおりの検索結果がなかった場合
+        else if (error.message === "Not Found") {
+          setErrorTitle("しおり不明");
+          setErrorMessage("しおりが見つかりませんでした。");
+        }
+        // その他
+        else {
+          setErrorTitle("サーバーエラー");
+          setErrorMessage("サーバーでエラーが発生しました。");
+        }
       });
   }, []);
 
+  // 印刷用画面遷移処理
+  function openWindowForPrint(guideId: string) {
+    window.open(`/travel-guide/print/${guideId}`);
+  }
+
+  // 編集ボタン押下時処理
+  function onClickEdit() {
+    navigator(`/travel-guide-register/${guideId}`, {state: guideDetail});
+  }
+
+  // 削除ボタン押下時処理
+  function onClickDelete() {
+    fetch(`${import.meta.env.VITE_API_PATH}/guides/delete/${guideId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        navigator("/travel-guide-list");
+      })
+      .catch((error) => {
+        // 認証失敗時
+        if (error.message === "Unauthorized") {
+          navigator("/login");
+        }
+        // しおりがなかった場合
+        else if (error.message === "Not Found") {
+          setErrorTitle("しおり不明");
+          setErrorMessage("しおりが見つかりませんでした。");
+        }
+        // その他
+        else {
+          setErrorTitle("サーバーエラー");
+          setErrorMessage("サーバーでエラーが発生しました。");
+        }
+      });
+  }
+
   return (
     <>
-      <div
-        className="text-center print-div border-2 no-print-border"
-        style={{
-          backgroundColor: printColor,
-          height: "794px",
-          width: "1123px",
-        }}
-      >
-        <Rnd default={{ x: 5, y: 0, width: "540px", height: "auto" }}>
-          <div className="border-2">
+      <div className="md:flex flex-row mx-32">
+        <div className="md:basis-1/2">
+          <div className="mt-4">
+            <p className="font-semibold">タイトル：</p>
             <p className="text-4xl font-semibold">{guideDetail?.title}</p>
           </div>
-        </Rnd>
-        <Rnd default={{ x: 5, y: 100, width: "540px", height: "auto" }}>
-          <div className="border-2">
-            <p className="font-semibold">目的地</p>
+          <div className="mt-4">
+            <p className="font-semibold">目的地：</p>
             <ul className="list-disc ml-4">
               {guideDetail?.destinations.map((destination) => {
                 return (
@@ -76,22 +119,23 @@ function TravelGuideDetail() {
               })}
             </ul>
           </div>
-        </Rnd>
-        <Rnd default={{ x: 5, y: 300, width: "540px", height: "auto" }}>
-          <div className="border-2">
+          <div className="mt-4">
             <p className="font-semibold">持ち物</p>
-            {guideDetail?.belongings.map((item) => {
-              return (
-                <p key={item.name} className="flex ml-4">
-                  <img src={checkbox} alt="checkbox" className="h-6"></img>
-                  {item.name}
-                </p>
-              );
-            })}
+            <ul className="list-disc ml-4">
+              {guideDetail?.belongings.map((belonging) => {
+                return (
+                  <li key={belonging.name} className="text-left ml-4">
+                    {belonging.name}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        </Rnd>
-        <Rnd default={{ x: 575, y: 0, width: "540px", height: "auto" }}>
-          <div className="border-2">
+        </div>
+
+        <div className="md:basis-1/2">
+          <div className="mt-4">
+            <p className="font-semibold">スケジュール：</p>
             <table className="table-fixed w-full text-left break-all">
               <thead className="border-b-2">
                 <tr>
@@ -120,33 +164,46 @@ function TravelGuideDetail() {
               </tbody>
             </table>
           </div>
-        </Rnd>
-        <Rnd default={{ x: 575, y: 400, width: "540px", height: "auto" }}>
-          <div className="self-center">
+          <div className="mt-4">
+            <p className="font-semibold">マップ：</p>
             {guideDetail && (
               <TravelGuideMap destinations={guideDetail.destinations} />
             )}
           </div>
-        </Rnd>
-      </div>
-      <div className="flex justify-center no-print">
-        <div className="mt-4">
-          <label className="align-middle">色設定：</label>
-          <input
-            type="color"
-            className="align-middle"
-            onChange={(e) => setPrintColor(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              window.print();
-            }}
-            className="border text-white bg-black rounded px-2 ml-4 align-middle"
-          >
-            印刷
-          </button>
         </div>
       </div>
+      <div className="mt-4 text-center">
+        <button
+          onClick={() => {
+            onClickEdit();
+          }}
+          className="border text-white bg-green-400 rounded px-2 mx-2"
+        >
+          編集
+        </button>
+        <button
+          onClick={() => {
+            onClickDelete();
+          }}
+          className="border text-white bg-red-400 rounded px-2 mx-2"
+        >
+          削除
+        </button>
+        <button
+          onClick={() => {
+            openWindowForPrint(guideId!);
+          }}
+          className="border text-white bg-black rounded px-2 mx-2"
+        >
+          印刷画面を開く
+        </button>
+      </div>
+      <TravelGuideDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        title={errorTitle}
+        message={errorMessage}
+      />
     </>
   );
 }

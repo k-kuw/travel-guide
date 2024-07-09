@@ -6,14 +6,15 @@ import { DataChangeProp, Destination, Schedule } from "@/types/travelGuide";
 import { ChangeEvent, useEffect, useState } from "react";
 
 type Props = {
-  onDataChange: DataChangeProp<Schedule[]>["onDataChange"];
+  data: Schedule[];
+  onDataChange: DataChangeProp<Schedule[]>;
   destinationData: Destination[];
 };
 
 // スケジュール入力コンポーネント
 function ScheduleRegister(props: Props) {
   // 親データ設定メソッド、目的地名データ
-  const { onDataChange, destinationData } = props;
+  const { data, onDataChange, destinationData } = props;
   // スケジュール
   const [schedule, setSchedule] = useState<Schedule>({
     time: "",
@@ -22,7 +23,7 @@ function ScheduleRegister(props: Props) {
     note: "",
   });
   // スケジュールリスト
-  const [scheduleList, setScheduleList] = useState<Schedule[]>([]);
+  const [scheduleList, setScheduleList] = useState<Schedule[]>(data);
 
   // スケジュール変更メソッド
   function onChangeSchedule(

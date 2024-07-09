@@ -33,7 +33,7 @@ function UserRegister() {
       return;
     }
     const params = {
-      username: nameRef.current!.value,
+      name: nameRef.current!.value,
       email: emailRef.current!.value,
       password: passwordRef.current!.value,
     };
@@ -67,9 +67,16 @@ function UserRegister() {
           setErrorMessage(
             "そのユーザ名は既に使用されています。\n別のユーザ名をご使用ください。"
           );
-        } else if (error.message === "Length Required") {
+        }
+        // パスワード文字数不足時
+        else if (error.message === "Length Required") {
           setErrorTitle("パスワード文字数不足");
           setErrorMessage("パスワードは5文字以上必要です。");
+        }
+        // その他
+        else {
+          setErrorTitle("サーバーエラー");
+          setErrorMessage("サーバーでエラーが発生しました。");
         }
         setOpenDialog(true);
       });
