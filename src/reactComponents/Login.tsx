@@ -28,6 +28,15 @@ function Login(props: Props) {
   // ログイン処理
   function handleLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // 入力不足の場合
+    if (nameRef.current!.value === "" || passwordRef.current!.value === "") {
+      setErrorTitle("入力不正");
+      setErrorMessage(
+        "入力が検知できませんでした。\nユーザ名、パスワードを再度ご入力ください。"
+      );
+      setOpenDialog(true);
+      return;
+    }
     // ローカルストレージを初期化
     localStorage.clear();
     setLoginContext(false);

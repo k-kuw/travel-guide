@@ -21,7 +21,10 @@ function TitleRegister(props: Props) {
 
   return (
     <div className="p-1">
-      <div className="text-4xl font-semibold mb-4 font-mono">タイトル</div>
+      <div className="text-4xl font-semibold mb-4 font-mono">
+        タイトル
+        <span className="text-sm text-red-500">&emsp;※必須</span>
+      </div>
       <Input defaultValue={title} onBlur={(e) => setTitle(e.target.value)} />
     </div>
   );
