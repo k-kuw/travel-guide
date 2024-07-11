@@ -26,7 +26,9 @@ function TravelGuidePrint() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 401) {
+            throw new Error("Unauthorized");
+          }
         }
         return response.json();
       })

@@ -76,7 +76,13 @@ function RegisterConfirmation(props: Props) {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 400) {
+            throw new Error("Bad Request");
+          } else if (response.status === 401) {
+            throw new Error("Unauthorized");
+          } else {
+            throw new Error();
+          }
         }
         return response.json();
       })
@@ -84,18 +90,18 @@ function RegisterConfirmation(props: Props) {
         navigate("/travel-guide-list");
       })
       .catch((error) => {
-        // 認証失敗時
-        if (error.message === "Unauthorized") {
-          setErrorTitle("ユーザ認証失敗");
-          setErrorMessage(
-            "ユーザ情報が取得できませんでした。\n再度ログインしてください。"
-          );
-        }
         // タイトル入力不足時
-        else if (error.message === "Bad Request") {
+        if (error.message === "Bad Request") {
           setErrorTitle("入力不正");
           setErrorMessage(
             "入力が検知できませんでした。\nタイトルが入力されていることをご確認ください。"
+          );
+        }
+        // 認証失敗時
+        else if (error.message === "Unauthorized") {
+          setErrorTitle("ユーザ認証失敗");
+          setErrorMessage(
+            "ユーザ情報が取得できませんでした。\n再度ログインしてください。"
           );
         }
         // その他
