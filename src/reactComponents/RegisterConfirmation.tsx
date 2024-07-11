@@ -9,6 +9,7 @@ import {
 } from "@/types/travelGuide";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingDialog from "./LoadingDialog";
 import TravelGuideDialog from "./TravelGuideDialog";
 type Props = {
   titleData: string;
@@ -21,6 +22,8 @@ type Props = {
 function RegisterConfirmation(props: Props) {
   // しおり入力データ
   const { titleData, destinationData, belongingData, scheduleData } = props;
+  // ローディングダイアログ表示
+  const [loadingDialog, setLoadingDialog] = useState(false);
   // 登録エラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
   // 登録エラー内容
@@ -32,7 +35,8 @@ function RegisterConfirmation(props: Props) {
   const { guideId } = useParams();
 
   // しおり登録処理
-  function registerGuide() {
+  function registerGuide(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
     // タイトル入力がなかった場合、処理を終了
     if (titleData === "") {
       setErrorTitle("入力不正");
@@ -66,6 +70,7 @@ function RegisterConfirmation(props: Props) {
     }
 
     const token = localStorage.getItem("token");
+    setLoadingDialog(true);
     fetch(`${import.meta.env.VITE_API_PATH}/guides/${requestPath}`, {
       method: requestMethod,
       headers: {
@@ -75,6 +80,7 @@ function RegisterConfirmation(props: Props) {
       body: JSON.stringify(params),
     })
       .then((response) => {
+        setLoadingDialog(false);
         if (!response.ok) {
           if (response.status === 400) {
             throw new Error("Bad Request");
@@ -172,7 +178,11 @@ function RegisterConfirmation(props: Props) {
         </table>
       </div>
       <Separator className="my-4" />
-      <Button type="button" className="w-full mt-5" onClick={registerGuide}>
+      <Button
+        type="button"
+        className="w-full mt-5"
+        onClick={(e) => registerGuide(e)}
+      >
         しおりを保存する
       </Button>
       <TravelGuideDialog
@@ -181,6 +191,7 @@ function RegisterConfirmation(props: Props) {
         title={errorTitle}
         message={errorMessage}
       />
+      <LoadingDialog open={loadingDialog} />
     </div>
   );
 }

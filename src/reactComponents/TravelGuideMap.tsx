@@ -28,7 +28,7 @@ function TravelGuideMap(props: Props) {
       ]}
       zoom={11}
       scrollWheelZoom={false}
-      className="h-96"
+      className="h-96 z-0"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

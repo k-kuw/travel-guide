@@ -14,11 +14,12 @@ type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   message: string;
+  onConfirm?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 // ダイアログコンポーネント
 function TravelGuideDialog(props: Props) {
-  const { open, setOpen, title, message } = props;
+  const { open, setOpen, title, message, onConfirm } = props;
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -28,7 +29,19 @@ function TravelGuideDialog(props: Props) {
             {message}
           </DialogDescription>
         </DialogHeader>
+
         <DialogFooter className="sm:justify-end">
+          {onConfirm && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={(e) => {
+                onConfirm(e);
+              }}
+            >
+              確定
+            </Button>
+          )}
           <DialogClose asChild>
             <Button type="button" variant="secondary">
               閉じる
