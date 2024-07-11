@@ -1,6 +1,7 @@
 import { GuideDetail } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingDialog from "./LoadingDialog";
 import TravelGuideDialog from "./TravelGuideDialog";
 import TravelGuideMap from "./TravelGuideMap";
 
@@ -15,6 +16,10 @@ function TravelGuideDetail() {
   // トークン
   const token = localStorage.getItem("token");
 
+  // ローディングダイアログ表示
+  const [loadingDialog, setLoadingDialog] = useState(false);
+  // 確認ダイアログ表示
+  const [confirmDialog, setConfirmDialog] = useState(false);
   // エラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
   // しおり操作エラー内容
@@ -69,12 +74,21 @@ function TravelGuideDetail() {
   }
 
   // 編集ボタン押下時処理
-  function onClickEdit() {
+  function onClickEdit(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
     navigator(`/travel-guide-register/${guideId}`, { state: guideDetail });
   }
 
   // 削除ボタン押下時処理
-  function onClickDelete() {
+  function onClickDelete(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    setConfirmDialog(true);
+  }
+
+  // 削除ボタン押下時処理
+  function deleteGuide(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    setLoadingDialog(true);
     fetch(`${import.meta.env.VITE_API_PATH}/guides/delete/${guideId}`, {
       method: "DELETE",
       headers: {
@@ -82,6 +96,7 @@ function TravelGuideDetail() {
       },
     })
       .then((response) => {
+        setLoadingDialog(false);
         if (!response.ok) {
           if (response.status === 401) {
             throw new Error("Unauthorized");
@@ -186,16 +201,16 @@ function TravelGuideDetail() {
       </div>
       <div className="mt-4 text-center">
         <button
-          onClick={() => {
-            onClickEdit();
+          onClick={(e) => {
+            onClickEdit(e);
           }}
           className="border text-white bg-green-400 rounded px-2 mx-2"
         >
           編集
         </button>
         <button
-          onClick={() => {
-            onClickDelete();
+          onClick={(e) => {
+            onClickDelete(e);
           }}
           className="border text-white bg-red-400 rounded px-2 mx-2"
         >
@@ -211,11 +226,19 @@ function TravelGuideDetail() {
         </button>
       </div>
       <TravelGuideDialog
+        open={confirmDialog}
+        setOpen={setConfirmDialog}
+        title={"削除確認"}
+        message={"削除してよろしいですか？"}
+        onConfirm={deleteGuide}
+      />
+      <TravelGuideDialog
         open={openDialog}
         setOpen={setOpenDialog}
         title={errorTitle}
         message={errorMessage}
       />
+      <LoadingDialog open={loadingDialog} />
     </>
   );
 }

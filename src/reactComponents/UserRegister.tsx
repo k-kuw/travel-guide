@@ -2,13 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingDialog from "./LoadingDialog";
 import TravelGuideDialog from "./TravelGuideDialog";
 
 // ユーザ登録コンポーネント
 function UserRegister() {
+  // ローディングダイアログ表示
+  const [loadingDialog, setLoadingDialog] = useState(false);
   // ユーザ登録失敗ダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
-  // ユーザ登録失敗内容
+  // ユーザ登録エラー内容
   const [errorTitle, setErrorTitle] = useState("サーバーエラー");
   const [errorMessage, setErrorMessage] =
     useState("サーバーでエラーが発生しました。");
@@ -37,6 +40,7 @@ function UserRegister() {
       email: emailRef.current!.value,
       password: passwordRef.current!.value,
     };
+    setLoadingDialog(true);
     fetch(`${import.meta.env.VITE_API_PATH}/users/register`, {
       method: "POST",
       headers: {
@@ -45,6 +49,7 @@ function UserRegister() {
       body: JSON.stringify(params),
     })
       .then((response) => {
+        setLoadingDialog(false);
         if (!response.ok) {
           if (response.status === 400) {
             throw new Error("Bad Request");
@@ -126,6 +131,7 @@ function UserRegister() {
         title={errorTitle}
         message={errorMessage}
       />
+      <LoadingDialog open={loadingDialog} />
     </div>
   );
 }

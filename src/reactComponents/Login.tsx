@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingDialog from "./LoadingDialog";
 import TravelGuideDialog from "./TravelGuideDialog";
 
 type Props = {
@@ -11,6 +12,8 @@ type Props = {
 function Login(props: Props) {
   // ログイン状況
   const { setLoginContext } = props;
+  // ローディングダイアログ表示
+  const [loadingDialog, setLoadingDialog] = useState(false);
   // ログインエラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
   // ログインエラー内容
@@ -43,6 +46,7 @@ function Login(props: Props) {
     const params = new URLSearchParams();
     params.append("username", nameRef.current!.value);
     params.append("password", passwordRef.current!.value);
+    setLoadingDialog(true);
     // トークン取得処理
     fetch(`${import.meta.env.VITE_API_PATH}/token`, {
       method: "POST",
@@ -52,6 +56,7 @@ function Login(props: Props) {
       body: params,
     })
       .then((response) => {
+        setLoadingDialog(false);
         if (!response.ok) {
           if (response.status === 400) {
             throw new Error("Bad Request");
@@ -133,6 +138,7 @@ function Login(props: Props) {
         title={errorTitle}
         message={errorMessage}
       />
+      <LoadingDialog open={loadingDialog} />
     </div>
   );
 }

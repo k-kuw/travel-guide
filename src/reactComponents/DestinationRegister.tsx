@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { DataChangeProp, Destination } from "@/types/travelGuide";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingDialog from "./LoadingDialog";
 import TravelGuideDialog from "./TravelGuideDialog";
 import TravelGuideMap from "./TravelGuideMap";
 
@@ -20,6 +21,8 @@ function DestinationRegister(props: Props) {
   const [destination, setDestination] = useState<string>("");
   // 目的地リスト
   const [destinationList, setDestinationList] = useState<Destination[]>(data);
+  // ローディングダイアログ表示
+  const [loadingDialog, setLoadingDialog] = useState(false);
   // 目的地検索エラーダイアログ表示
   const [openDialog, setOpenDialog] = useState(false);
   // 目的地検索エラー内容
@@ -35,7 +38,8 @@ function DestinationRegister(props: Props) {
   }, [destinationList, onDataChange]);
 
   // 目的地追加処理
-  function onClickAddDistination() {
+  function onClickAddDistination(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
     if (destination === "") {
       return;
     }
@@ -43,6 +47,7 @@ function DestinationRegister(props: Props) {
       name: destination,
     };
     const token = localStorage.getItem("token");
+    setLoadingDialog(true);
     fetch(`${import.meta.env.VITE_API_PATH}/map/search-address`, {
       method: "POST",
       headers: {
@@ -52,6 +57,7 @@ function DestinationRegister(props: Props) {
       body: JSON.stringify(params),
     })
       .then((response) => {
+        setLoadingDialog(false);
         if (!response.ok) {
           if (response.status === 401) {
             throw new Error("Unauthorized");
@@ -120,7 +126,7 @@ function DestinationRegister(props: Props) {
       <Button
         type="button"
         className="w-full my-5"
-        onClick={() => onClickAddDistination()}
+        onClick={(e) => onClickAddDistination(e)}
       >
         目的地を追加
       </Button>
@@ -133,6 +139,7 @@ function DestinationRegister(props: Props) {
         title={errorTitle}
         message={errorMessage}
       />
+      <LoadingDialog open={loadingDialog} />
     </div>
   );
 }

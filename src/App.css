@@ -1,3 +1,4 @@
+/* 印刷設定 */
 @media print {
   body {
     -webkit-print-color-adjust: exact;
@@ -21,4 +22,9 @@
   size: A4 landscape;
   margin: 0;
   padding: 0;
+}
+
+/* ローディングダイアログのXボタン非表示 */
+.loading button {
+  display: none;
 }
