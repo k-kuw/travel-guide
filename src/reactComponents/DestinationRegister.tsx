@@ -53,7 +53,13 @@ function DestinationRegister(props: Props) {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 401) {
+            throw new Error("Unauthorized");
+          } else if (response.status === 404) {
+            throw new Error("Not Found");
+          } else {
+            throw new Error();
+          }
         }
         return response.json();
       })

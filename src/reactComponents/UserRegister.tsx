@@ -46,7 +46,15 @@ function UserRegister() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 400) {
+            throw new Error("Bad Request");
+          } else if (response.status === 409) {
+            throw new Error("Conflict");
+          } else if (response.status === 411) {
+            throw new Error("Length Required");
+          } else {
+            throw new Error();
+          }
         }
         return response.json();
       })

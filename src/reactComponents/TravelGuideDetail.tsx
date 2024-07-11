@@ -32,7 +32,13 @@ function TravelGuideDetail() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 401) {
+            throw new Error("Unauthorized");
+          } else if (response.status === 404) {
+            throw new Error("Not Found");
+          } else {
+            throw new Error();
+          }
         }
         return response.json();
       })
@@ -64,7 +70,7 @@ function TravelGuideDetail() {
 
   // 編集ボタン押下時処理
   function onClickEdit() {
-    navigator(`/travel-guide-register/${guideId}`, {state: guideDetail});
+    navigator(`/travel-guide-register/${guideId}`, { state: guideDetail });
   }
 
   // 削除ボタン押下時処理
@@ -77,7 +83,13 @@ function TravelGuideDetail() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 401) {
+            throw new Error("Unauthorized");
+          } else if (response.status === 404) {
+            throw new Error("Not Found");
+          } else {
+            throw new Error();
+          }
         }
         navigator("/travel-guide-list");
       })

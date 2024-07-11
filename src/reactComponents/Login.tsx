@@ -53,7 +53,13 @@ function Login(props: Props) {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          if (response.status === 400) {
+            throw new Error("Bad Request");
+          } else if (response.status === 401) {
+            throw new Error("Unauthorized");
+          } else {
+            throw new Error();
+          }
         }
         return response.json();
       })
@@ -66,18 +72,18 @@ function Login(props: Props) {
         navigate("/travel-guide-register");
       })
       .catch((error) => {
-        // 認証失敗時
-        if (error.message === "Unauthorized") {
-          setErrorTitle("認証失敗");
-          setErrorMessage(
-            "認証に失敗しました。\nユーザ名、パスワードをご確認の上、再度お試しください。"
-          );
-        }
         // 入力内容不足時
-        else if (error.message === "Bad Request") {
+        if (error.message === "Bad Request") {
           setErrorTitle("入力不正");
           setErrorMessage(
             "入力が検知できませんでした。\nユーザ名、パスワードを再度ご入力ください。"
+          );
+        }
+        // 認証失敗時
+        else if (error.message === "Unauthorized") {
+          setErrorTitle("認証失敗");
+          setErrorMessage(
+            "認証に失敗しました。\nユーザ名、パスワードをご確認の上、再度お試しください。"
           );
         }
         // その他
