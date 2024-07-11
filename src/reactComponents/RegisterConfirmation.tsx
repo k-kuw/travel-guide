@@ -33,6 +33,16 @@ function RegisterConfirmation(props: Props) {
 
   // しおり登録処理
   function registerGuide() {
+    // タイトル入力がなかった場合、処理を終了
+    if (titleData === "") {
+      setErrorTitle("入力不正");
+      setErrorMessage(
+        "入力が検知できませんでした。\nタイトルが入力されていることをご確認ください。"
+      );
+      setOpenDialog(true);
+      return;
+    }
+    // 目的地のシーケンス番号を除いたものをパラメータに渡す
     const revisedDestinationData = destinationData.map((destination) => {
       delete destination.id;
       return destination;
@@ -45,6 +55,7 @@ function RegisterConfirmation(props: Props) {
       schedules: scheduleData,
     };
 
+    // 新規登録の場合
     let requestPath = "register";
     let requestMethod = "POST";
     // 更新の場合
