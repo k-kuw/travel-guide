@@ -117,8 +117,8 @@ function TravelGuidePrint() {
             </table>
           </div>
         </Rnd>
-        <Rnd default={{ x: 575, y: 400, width: "540px", height: "auto" }}>
-          <div className="self-center">
+        <Rnd default={{ x: 575, y: 400, width: "540px", height: "384px" }}>
+          <div className="self-center guide-map">
             {guideDetail && (
               <TravelGuideMap destinations={guideDetail.destinations} />
             )}

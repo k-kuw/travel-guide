@@ -28,3 +28,11 @@
 .loading button {
   display: none;
 }
+
+/* 印刷画面の地図の高さ調節 */
+.guide-map {
+  height: 100%;
+}
+.guide-map .leaflet-container {
+  height: 100%;
+}
