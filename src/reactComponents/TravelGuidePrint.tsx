@@ -21,6 +21,7 @@ function TravelGuidePrint() {
     fetch(`${import.meta.env.VITE_API_PATH}/guides/search/${guideId}`, {
       method: "GET",
       headers: {
+        "x-api-key": import.meta.env.VITE_API_KEY,
         Authorization: `Bearer ${token}`,
       },
     })
