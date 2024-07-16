@@ -52,6 +52,7 @@ function DestinationRegister(props: Props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_API_KEY,
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(params),

@@ -52,6 +52,7 @@ function Login(props: Props) {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        "x-api-key": import.meta.env.VITE_API_KEY,
       },
       body: params,
     })
@@ -62,6 +63,8 @@ function Login(props: Props) {
             throw new Error("Bad Request");
           } else if (response.status === 401) {
             throw new Error("Unauthorized");
+          } else if (response.status === 403) {
+            throw new Error("Invalid APIKey");
           } else {
             throw new Error();
           }

@@ -1,4 +1,9 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type Props = {
   open: boolean;
@@ -10,6 +15,8 @@ function LoadingDialog(props: Props) {
   return (
     <Dialog open={open}>
       <DialogContent className="loading">
+        <DialogTitle></DialogTitle>
+        <DialogDescription className="whitespace-pre-wrap"></DialogDescription>
         <div className="text-center">
           <div role="status">
             <svg

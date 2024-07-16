@@ -32,6 +32,7 @@ function TravelGuideDetail() {
     fetch(`${import.meta.env.VITE_API_PATH}/guides/search/${guideId}`, {
       method: "GET",
       headers: {
+        "x-api-key": import.meta.env.VITE_API_KEY,
         Authorization: `Bearer ${token}`,
       },
     })
@@ -92,6 +93,7 @@ function TravelGuideDetail() {
     fetch(`${import.meta.env.VITE_API_PATH}/guides/delete/${guideId}`, {
       method: "DELETE",
       headers: {
+        "x-api-key": import.meta.env.VITE_API_KEY,
         Authorization: `Bearer ${token}`,
       },
     })
